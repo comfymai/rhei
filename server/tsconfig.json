@@ -20,6 +20,9 @@
         "strictPropertyInitialization": false,
         "noImplicitAny": true,
         "noUnusedLocals": true,
-        "noUnusedParameters": true
+        "noUnusedParameters": true,
+        "paths": {
+            "@app/*": ["./src/*"]
+        }
     }
 }
