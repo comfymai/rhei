@@ -1,11 +1,10 @@
 import {
-    Body,
     Controller,
     Get,
     InternalServerErrorException,
     NotFoundException,
+    Param,
 } from "@nestjs/common";
-import { FetchData } from "./dtos/fetch.data";
 
 import { Item, LibraryService } from "./library.service";
 
@@ -24,11 +23,11 @@ export class LibraryController {
         else return { items };
     }
 
-    @Get("/pages")
+    @Get("/pages/:name")
     public async fetchPages(
-        @Body() data: FetchData
+        @Param("name") name: string
     ): Promise<{ pages: string[] }> {
-        const pages = await this.librarian.fetchPages(data);
+        const pages = await this.librarian.fetchPages(name);
 
         if (pages == null) throw new NotFoundException("Failed to find item.");
         else return { pages };

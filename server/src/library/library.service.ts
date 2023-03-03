@@ -4,7 +4,6 @@ import { promises as fs } from "fs";
 
 import { Nullable } from "@app/helpers/types";
 import { config } from "@app/config";
-import { FetchData } from "./dtos/fetch.data";
 
 export interface Item {
     name: string;
@@ -41,17 +40,17 @@ export class LibraryService {
         }
     }
     
-    public async fetchPages(data: FetchData): Promise<Nullable<string[]>> {
+    public async fetchPages(name: string): Promise<Nullable<string[]>> {
         try {
-            const itemDir = path.join(config.libraryDir, data.name)
+            const itemDir = path.join(config.libraryDir, name)
             const filenames = await fs.readdir(itemDir)
 
-            const basePath = `http://127.0.0.1:${config.port}${config.staticPath}/${data.name}` 
+            const basePath = `http://127.0.0.1:${config.port}${config.staticPath}${name}` 
             const files = filenames.map(filename => encodeURI(`${basePath}/${filename}`))
 
             return files
         } catch (error) {
-            this.logger.error("Failed to fetch pages:\n${error}")
+            this.logger.error(`Failed to fetch pages:\n${error}`)
             return null
         }
 

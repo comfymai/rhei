@@ -7,7 +7,7 @@ import { LibraryModule } from "./library/library.module";
 @Module({
     imports: [
         ServeStaticModule.forRoot({
-            rootPath: path.join(__dirname, "..", "library"),
+            rootPath: path.join(__dirname, "..", "public"),
             serveRoot: config.staticPath,
             renderPath: config.staticPath
         }),
