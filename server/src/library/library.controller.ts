@@ -14,21 +14,23 @@ export class LibraryController {
     constructor(private librarian: LibraryService) {}
 
     @Get("/index")
-    public async index(): Promise<Item[]> {
+    public async index(): Promise<{ items: Item[] }> {
         const items = await this.librarian.fetchIndex();
 
         if (items == null)
             throw new InternalServerErrorException(
                 "Failed to fetch library index."
             );
-        else return items;
+        else return { items };
     }
 
     @Get("/pages")
-    public async fetchPages(@Body() data: FetchData): Promise<string[]> {
-        const pages = await this.librarian.fetchPages(data)  
+    public async fetchPages(
+        @Body() data: FetchData
+    ): Promise<{ pages: string[] }> {
+        const pages = await this.librarian.fetchPages(data);
 
-        if (pages == null) throw new NotFoundException("Failed to find item.")
-        else return pages
+        if (pages == null) throw new NotFoundException("Failed to find item.");
+        else return { pages };
     }
 }
