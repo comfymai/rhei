@@ -1,9 +1,21 @@
+import { useInView } from "react-intersection-observer";
+
 interface PageProps {
-    url: string
+    url: string;
+    onScrollTo: () => void
 }
 
-export function Page({ url }: PageProps) {
-    return <picture>
-        <img src={url}/>
-    </picture>
+export function Page({ url, onScrollTo }: PageProps) {
+    const { ref } = useInView({
+        rootMargin: "-50% 0px",
+        onChange: (inView) => {
+            if (inView) onScrollTo()
+        }
+    })
+
+    return (
+        <picture ref={ref}>
+            <img src={url} />
+        </picture>
+    );
 }

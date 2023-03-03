@@ -30,11 +30,19 @@ export function App() {
         } else setPages(data.pages);
     }
 
+    function handleBack() {
+        setSelectedItem(null);
+        setPages(null);
+    }
+
     function renderViewer() {
         return pages == null ? (
             <h1>Loading pages...</h1>
         ) : (
-            <Viewer pages={pages} />
+            <Viewer
+                pages={pages}
+                onBack={handleBack}
+            />
         );
     }
 
