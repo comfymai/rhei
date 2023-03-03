@@ -4,28 +4,50 @@ import { Bookshelf } from "./components/Bookshelf";
 
 import { Api, Item } from "./lib/api";
 import { Nullable } from "./helpers/types";
+import { Viewer } from "./components/Viewer";
 
 export function App() {
     const [items, setItems] = useState<Item[]>([]);
     const [selectedItem, setSelectedItem] = useState<Nullable<Item>>(null);
+    const [pages, setPages] = useState<Nullable<string[]>>(null);
 
     useEffect(() => {
-        (async () => {
-            const data = await Api.indexLibrary();
-            if (data) setItems(data.items);
-        })();
+        loadInitialData();
     }, []);
 
-    const handlePick = (item: Item) => {
+    async function loadInitialData() {
+        const data = await Api.indexLibrary();
+        if (data) setItems(data.items);
+    }
+
+    async function handlePick(item: Item) {
         setSelectedItem(item);
-    };
+
+        const data = await Api.fetchPages(item.name);
+        if (data == null) {
+            console.log(`Failed to load pages.`);
+            setSelectedItem(null);
+        } else setPages(data.pages);
+    }
+
+    function renderViewer() {
+        return pages == null ? (
+            <h1>Loading pages...</h1>
+        ) : (
+            <Viewer pages={pages} />
+        );
+    }
 
     return (
         <div className="fullscreen flex-center">
-            <Bookshelf
-                items={items}
-                onPick={handlePick}
-            />
+            {selectedItem == null ? (
+                <Bookshelf
+                    items={items}
+                    onPick={handlePick}
+                />
+            ) : (
+                renderViewer()
+            )}
         </div>
     );
 }

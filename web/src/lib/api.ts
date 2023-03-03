@@ -8,7 +8,11 @@ export interface Item {
 }
 
 interface LibraryIndexData {
-    items: Array<Item>;
+    items: Item[];
+}
+
+interface LibraryFetchData {
+    pages: string[];
 }
 
 export class Api {
@@ -23,7 +27,21 @@ export class Api {
             );
             return response.data;
         } catch (error) {
-            console.error(`Failed to index library\n${error}.`);
+            console.error(`Failed to index library:\n${error}.`);
+            return null;
+        }
+    }
+
+    public static async fetchPages(
+        name: string
+    ): Promise<Nullable<LibraryFetchData>> {
+        try {
+            const response = await Api.instance.get<LibraryFetchData>(
+                `/library/pages/${name}`
+            );
+            return response.data;
+        } catch (error) {
+            console.log(`Failed to fetch pages:\n${error}`);
             return null;
         }
     }
