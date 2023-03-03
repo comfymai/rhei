@@ -1,0 +1,17 @@
+@tailwind base;
+@tailwind utilities;
+@tailwind components;
+
+@layer utilities {
+    .fullscreen {
+        @apply w-screen h-screen;
+    }
+
+    .flex-center {
+        @apply flex justify-center items-center;
+    }
+}
+
+body {
+    @apply bg-black text-indigo-100;
+}
