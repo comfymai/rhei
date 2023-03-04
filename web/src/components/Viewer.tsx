@@ -3,6 +3,8 @@ import InfiniteScroll from "react-infinite-scroll-component";
 
 import { Page } from "./Page";
 
+const PAGES_PER_LOAD = 5;
+
 interface ViewerProps {
     pages: string[];
     onBack: () => void;
@@ -10,15 +12,18 @@ interface ViewerProps {
 
 export function Viewer({ pages, onBack }: ViewerProps) {
     const viewerRef = useRef<HTMLDivElement>(null);
-    const [loadedPages, setLoadedPages] = useState<string[]>(pages.slice(0, 6));
+    const [loadedPages, setLoadedPages] = useState<string[]>(
+        pages.slice(0, PAGES_PER_LOAD)
+    );
     const [currentPage, setCurrentPage] = useState(0);
 
     if (viewerRef.current) viewerRef.current.focus();
 
-    // TODO: Unload some pages to avoid beeg memory gluttony
     function loadNext() {
         const newestPage = loadedPages.length;
-        const nextPages = pages.splice(newestPage, 6);
+        const nextPages = pages
+            .slice(newestPage, newestPage + PAGES_PER_LOAD)
+            .filter(page => page);
 
         setLoadedPages([...loadedPages, ...nextPages]);
     }
@@ -33,7 +38,7 @@ export function Viewer({ pages, onBack }: ViewerProps) {
 
     return (
         <div className="fullscreen overflow-hidden">
-            <div className="fixed p-2 bg-white text-black">
+            <div className="fixed p-1.5 bg-white text-black">
                 {currentPage} / {pages.length}
             </div>
             <div
@@ -44,7 +49,7 @@ export function Viewer({ pages, onBack }: ViewerProps) {
                 tabIndex={-1}
             >
                 <InfiniteScroll
-                    dataLength={pages.length}
+                    dataLength={loadedPages.length}
                     next={loadNext}
                     hasMore={loadedPages.length < pages.length}
                     loader={<p>Loading...</p>}
