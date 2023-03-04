@@ -28,12 +28,35 @@ export function Viewer({ pages, onBack }: ViewerProps) {
         setLoadedPages([...loadedPages, ...nextPages]);
     }
 
-    function handleKeydown(event: React.KeyboardEvent<HTMLDivElement>) {
+    function scrollContent(direction: "up" | "down", multiplier: number = 1) {
+        const content = document.getElementsByClassName(
+            "infinite-scroll-component"
+        )[0];
+
+        if (direction === "up")
+            content.scrollBy({
+                top: -200 * multiplier,
+            });
+        else
+            content.scrollBy({
+                top: 200 * multiplier,
+            });
+    }
+
+    function handleKeyDown(event: React.KeyboardEvent<HTMLDivElement>) {
         const code = event.code;
         const isShift = event.shiftKey;
-        console.log(code, isShift);
 
         if (code === "Backspace") onBack();
+
+        if (code === "KeyJ") {
+            if (isShift) scrollContent("down", 2.5);
+            else scrollContent("down");
+        }
+        if (code === "KeyK") {
+            if (isShift) scrollContent("up", 2.5);
+            else scrollContent("up");
+        }
     }
 
     return (
@@ -45,7 +68,7 @@ export function Viewer({ pages, onBack }: ViewerProps) {
                 className="w-fit flex items-center mx-auto"
                 id="viewer"
                 ref={viewerRef}
-                onKeyDown={handleKeydown}
+                onKeyDown={handleKeyDown}
                 tabIndex={-1}
             >
                 <InfiniteScroll
