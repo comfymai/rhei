@@ -33,7 +33,7 @@ export function Bookshelf({ items, onPick }: BookshelfProps) {
 
         if (code === "KeyJ") updateSelected(selected + (isShift ? 6 : 1));
         else if (code === "KeyK") updateSelected(selected - (isShift ? 6 : 1));
-        else if (code === "Enter") onPick(items[selected]);
+        else if (["Enter", "KeyM"].includes(code)) onPick(items[selected]);
     }
 
     function isSelected(itemIndex: number) {
@@ -50,7 +50,7 @@ export function Bookshelf({ items, onPick }: BookshelfProps) {
             >
                 <strong className="uppercase font-bold">Library</strong>
                 <p className="italic">
-                    k/j: up/down, K/J: up/down by 6, enter: open
+                    k/j: up/down, K/J: up/down by 6, enter/m: open
                 </p>
             </div>
             <ul className="p-2 border border-white w-[90dvw] h-[90dvh]">
